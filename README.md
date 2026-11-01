@@ -6,18 +6,18 @@ A Claude Code skill that runs a coordinated, **audit-only** search for materiall
 
 The audit prompt is by **[Aaron Francis](https://aaronfrancis.com)**: [Audit your codebase](https://gist.github.com/aarondfrancis/8735edbe48532f97ee5ea818db4dbd47). This skill wraps his prompt verbatim for the `project` scope and adds two derived variants (`branch`, `feature`) so the same method applies to a diff, a PR, or a feature spread over several repositories. The idea, the structure (coverage contract, bounded worker reviews, coordinator validation, audit the audit), and the worker brief are his. See [reference.md](skills/fgilio-audit/reference.md) for the exact provenance of each file.
 
-Everything lives in [skills/fgilio-audit](skills/fgilio-audit): `SKILL.md` picks the scope; `prompts/` holds one prompt per scope.
+Everything lives in [skills/fgilio-audit](skills/fgilio-audit): `SKILL.md` picks the scope, and `prompts/` holds one prompt per scope.
 
 ## Scopes
 
 One skill, four scopes, selected with `--scope=` (or the bare word):
 
-- **changes (default)** — `/fgilio-audit` audits the current or last changes: the uncommitted diff if the tree is dirty, otherwise the last commit.
-- **branch** — `/fgilio-audit --scope=branch [PR]` audits the current branch against its merge base and its open PR.
-- **project** — `/fgilio-audit --scope=project` audits the entire codebase (Aaron's original prompt).
-- **feature** — `/fgilio-audit --scope=feature repoA repoB …` audits one feature implemented across several repositories, one branch/PR each. Review areas may cross repository boundaries.
+- **changes (default)**: `/fgilio-audit` audits the current or last changes: the uncommitted diff if the tree is dirty, otherwise the last commit.
+- **branch**: `/fgilio-audit --scope=branch [PR]` audits the current branch against its merge base and its open PR.
+- **project**: `/fgilio-audit --scope=project` audits the entire codebase (Aaron's original prompt).
+- **feature**: `/fgilio-audit --scope=feature repoA repoB …` audits one feature implemented across several repositories, one branch/PR each. Review areas may cross repository boundaries.
 
-```
+```text
 /fgilio-audit
 /fgilio-audit branch 65
 /fgilio-audit --scope=project
@@ -32,14 +32,14 @@ Installed as a plugin, skills are namespaced as `/<plugin>:<skill>`, so the comm
 
 Installs through the [fgilio marketplace](https://github.com/fgilio/claude-plugins):
 
-```
+```text
 /plugin marketplace add fgilio/claude-plugins
 /plugin install fgilio-audit@fgilio
 ```
 
 ### Manual clone
 
-Clone and symlink into your skills directory (Claude Code shown; Codex uses `~/.codex/skills`):
+Clone and symlink into your skills directory (Claude Code shown. Codex uses `~/.codex/skills`):
 
 ```bash
 git clone https://github.com/fgilio/fgilio-audit-skill.git ~/dev/skills/fgilio-audit-skill
@@ -48,6 +48,17 @@ ln -s ~/dev/skills/fgilio-audit-skill/skills/fgilio-audit ~/.claude/skills/fgili
 
 This path also works with any agent that supports the open [Agent Skills](https://agentskills.io) format. Updates require a manual `git pull`.
 
+## Development
+
+```bash
+bun install
+bun run check
+```
+
+`bun install` installs the pinned tools from `bun.lock` and the pre-commit hook, which formats and lints the staged Markdown, JSON and YAML. `bun run check` runs the format and Markdown gates. CI also runs the prose and plugin checks. [fleet/README.md](https://github.com/fgilio/claude-plugins/blob/main/fleet/README.md) in the marketplace repository describes the standard and the shared workflow that checks it.
+
+The prompts in `skills/fgilio-audit/prompts/` quote Aaron's text verbatim, so every check leaves them as written: `.prettierignore` keeps them out of oxfmt, the `.markdownlint-cli2.jsonc` next to them keeps them out of markdownlint, and `.proseignore` keeps them out of the prose check.
+
 ## License
 
-[MIT](LICENSE). The original prompt is © Aaron Francis and is reproduced here with attribution; see [reference.md](skills/fgilio-audit/reference.md).
+[MIT](LICENSE). The original prompt is © Aaron Francis and is reproduced here with attribution. See [reference.md](skills/fgilio-audit/reference.md).

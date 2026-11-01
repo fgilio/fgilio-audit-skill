@@ -13,21 +13,21 @@ disable-model-invocation: true
 
 # fgilio-audit
 
-An audit-only exercise. You are the coordinator: build a coverage contract, fan out bounded read-only reviews, independently verify every finding, then audit the audit. The prompt text per scope lives in `prompts/` and is the source of truth; this file only picks the scope and states the shared rules.
+An audit-only exercise. You are the coordinator: build a coverage contract, fan out bounded read-only reviews, independently verify every finding, then audit the audit. The prompt text per scope lives in `prompts/` and is the source of truth. This file only picks the scope and states the shared rules.
 
-Based on **Aaron Francis's "Audit your codebase"** prompt (https://gist.github.com/aarondfrancis/8735edbe48532f97ee5ea818db4dbd47). `prompts/project.md` is his text verbatim; the other scopes derive from it. Full provenance: `reference.md`.
+Based on **Aaron Francis's "Audit your codebase"** prompt (<https://gist.github.com/aarondfrancis/8735edbe48532f97ee5ea818db4dbd47>). `prompts/project.md` is his text verbatim, and the other scopes derive from it. Full provenance: `reference.md`.
 
 ## Parsing arguments
 
 `$ARGUMENTS` carries the invocation. Resolve:
 
-1. **Scope** — the value of `--scope=…` if present. Accept the bare word too (`fgilio-audit branch`).
-   - `changes` (default): the current or last changes. Use the uncommitted diff (staged + unstaged) if the working tree is dirty; otherwise the last commit (`HEAD~1..HEAD`). Runs `prompts/branch.md` with that diff as the PR scope.
+1. **Scope**: the value of `--scope=…` if present. Accept the bare word too (`fgilio-audit branch`).
+   - `changes` (default): the current or last changes. Use the uncommitted diff (staged + unstaged) if the working tree is dirty. Otherwise use the last commit (`HEAD~1..HEAD`). Runs `prompts/branch.md` with that diff as the PR scope.
    - `branch`: the current branch against its merge base with the target branch, and its open PR if any. Runs `prompts/branch.md`.
    - `project`: the entire codebase. Runs `prompts/project.md`.
    - `feature`: one feature implemented across several repositories, one branch/PR each. Runs `prompts/feature.md`.
-2. **Target PR** (`branch` scope) — a PR number or URL if given; otherwise the open PR for the current branch, if any. Without a PR, the merge-base diff alone defines scope.
-3. **Repositories** (`feature` scope) — paths or names given as arguments. If none, ask via AskUserQuestion which repos and branches make up the feature; do not guess.
+2. **Target PR** (`branch` scope): a PR number or URL if given. Otherwise the open PR for the current branch, if any. Without a PR, the merge-base diff alone defines scope.
+3. **Repositories** (`feature` scope): paths or names given as arguments. If none, ask via AskUserQuestion which repos and branches make up the feature. Do not guess.
 
 State the resolved scope (and diff range, PR, or repo list) in one line before you begin.
 
