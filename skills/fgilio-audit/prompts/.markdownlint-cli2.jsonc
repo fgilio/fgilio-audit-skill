@@ -1,0 +1,5 @@
+{
+  // These prompts quote Aaron Francis's text verbatim (see LICENSE), so
+  // markdownlint leaves their structure as he wrote it.
+  "ignores": ["*.md"],
+}

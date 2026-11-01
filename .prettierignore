@@ -1,4 +1,3 @@
-node_modules
-vendor
-.claude/plans
-skills/fgilio-audit/prompts/
+# oxfmt reads this file. The prompts quote Aaron Francis's text verbatim
+# (see LICENSE), so the formatter leaves their numbering as he wrote it.
+skills/fgilio-audit/prompts/*.md
